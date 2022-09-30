@@ -10,6 +10,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 app.get('/', (req, res) => res.send(path.join(__dirname, 'public/index.html')));
 
 app.get('/notes', (req, res) =>
@@ -17,16 +18,19 @@ app.get('/notes', (req, res) =>
 );
 
 
-app.get('/api/notes', (req, res) => res.json(noteData));
+app.get('/api/notes', (req, res) => {
 
-
-// fs.readFile(noteData, 'utf-8', (err, data) => {
-//   if (err) {
-//     console.error(err);
-//   } else {
-//     console.log(noteData);
-//   }
-// });
+  fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(data);
+      res.json(JSON.parse(data));
+    }
+    // console.log(data);
+    
+  });
+});
 
 app.listen(PORT, () =>
   console.log(`Express server listening on port ${PORT}!`)
