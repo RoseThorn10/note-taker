@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const uuid = require('uuid');
@@ -16,15 +16,17 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/notes.html'))
 );
 
+
 app.get('/api/notes', (req, res) => res.json(noteData));
 
-fs.readFile(noteData, 'utf-8', (err, data) => {
-  if (err) {
-    console.error(err);
-  } else {
-    // JSON.parse(data);
-    console.log(data);
-  });
+
+// fs.readFile(noteData, 'utf-8', (err, data) => {
+//   if (err) {
+//     console.error(err);
+//   } else {
+//     console.log(noteData);
+//   }
+// });
 
 app.listen(PORT, () =>
   console.log(`Express server listening on port ${PORT}!`)
