@@ -3,7 +3,7 @@ const path = require('path');
 const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 // const noteData = require('./db/db.json');
 const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
 
@@ -22,16 +22,19 @@ app.get('/notes', (req, res) =>
 
 app.get('/api/notes', (req, res) => {
 
-  fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(data);
-      res.json(JSON.parse(data));
-    }
-    // console.log(data);
+  readFromFile('./db/db.json')
+  .then((data) => res.json(JSON.parse(data)))
+
+  // fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     console.log(data);
+  //     res.json(JSON.parse(data));
+  //   }
+  //   // console.log(data);
     
-  });
+  // });
 });
 
 app.post('/api/notes', (req, res) => {
@@ -39,7 +42,8 @@ app.post('/api/notes', (req, res) => {
   const noteObj =
   {
     title,
-    text
+    text,
+    id: uuidv4()
   }
   readAndAppend(noteObj, './db/db.json')
 })
