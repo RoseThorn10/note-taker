@@ -4,7 +4,9 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const uuid = require('uuid');
-const noteData = require('./db/db.json');
+// const noteData = require('./db/db.json');
+const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
+
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +33,16 @@ app.get('/api/notes', (req, res) => {
     
   });
 });
+
+app.post('/api/notes', (req, res) => {
+  const { title, text } = req.body
+  const noteObj =
+  {
+    title,
+    text
+  }
+  readAndAppend(noteObj, './db/db.json')
+})
 
 app.listen(PORT, () =>
   console.log(`Express server listening on port ${PORT}!`)
